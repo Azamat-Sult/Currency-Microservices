@@ -16,6 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class CurrencyConversionService {
 
+    private final RestTemplate restTemplate;
     private final CurrencyExchangeProxy currencyExchangeProxy;
 
     public CurrencyConversion calculateCurrencyConversion(String from, String to, BigDecimal quantity) {
@@ -23,7 +24,7 @@ public class CurrencyConversionService {
         uriVariables.put("from", from);
         uriVariables.put("to", to);
         ResponseEntity<CurrencyExchangeDto> responseEntity =
-                new RestTemplate().getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}",
+                restTemplate.getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}",
                         CurrencyExchangeDto.class, uriVariables);
         CurrencyExchangeDto currencyExchangeDto = responseEntity.getBody();
         return new CurrencyConversion(currencyExchangeDto.getId(), from, to, quantity,
